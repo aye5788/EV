@@ -6,7 +6,6 @@ ORATS_TOKEN       = st.secrets["orats"]["token"]
 FRED_API_KEY      = st.secrets.get("fred", {}).get("key", None)
 
 def get_spot(symbol):
-    """Fetch current spot price from Alpha Vantage."""
     url = (
       f"https://www.alphavantage.co/query?"
       f"function=GLOBAL_QUOTE&symbol={symbol}&apikey={ALPHAVANTAGE_KEY}"
@@ -15,7 +14,6 @@ def get_spot(symbol):
     return float(resp["Global Quote"]["05. price"])
 
 def get_iv_surface(symbol, expiry):
-    """Fetch implied‑vol seed points from ORATS for a given expiry."""
     url = (
       "https://api.orats.io/datav2/monies/implied"
       f"?token={ORATS_TOKEN}"
@@ -28,13 +26,12 @@ def get_iv_surface(symbol, expiry):
       "spotAtSample": rec["stockPrice"],
       "vol95":        rec["vol95"],
       "vol75":        rec["vol75"],
-      "vol50":        rec["vol50"],
+      "vol50":        rec["vol50"],  # ATM IV
       "vol25":        rec["vol25"],
       "vol10":        rec["vol10"],
     }
 
 def get_rate():
-    """Fetch latest 3‑mo T‑bill rate from FRED (as decimal)."""
     if not FRED_API_KEY:
         return 0.0
     url = (
