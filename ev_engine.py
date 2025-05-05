@@ -4,7 +4,6 @@ from datetime import date
 import QuantLib as ql
 
 def build_density(spot, rate, iv, eval_date):
-    """Return risk‑neutral log‑normal PDF function q(ST)."""
     today = ql.Date().todaysDate()
     ql_eval = ql.Date(eval_date.day, eval_date.month, eval_date.year)
     T = (ql_eval - today) / 365.0
@@ -16,7 +15,6 @@ def build_density(spot, rate, iv, eval_date):
     return pdf
 
 def price_leg(leg, ST, rate, eval_date):
-    """Mark‑to‑market one leg at hypothetical ST on eval_date."""
     K, qty, kind, expiry, iv = (
         leg["strike"], leg["qty"], leg["type"], leg["expiry"], leg["iv"]
     )
@@ -39,11 +37,9 @@ def price_leg(leg, ST, rate, eval_date):
     return qty * price
 
 def portfolio_value(legs, ST, rate, eval_date):
-    """Sum of all leg values at ST."""
     return sum(price_leg(leg, ST, rate, eval_date) for leg in legs)
 
 def expected_value(legs, spot, rate, iv_atm, eval_date):
-    """Compute EV = ∫[V(ST)-cost0]·q(ST)dST."""
     pdf = build_density(spot, rate, iv_atm, eval_date)
     cost0 = sum(l["qty"] * l["price"] for l in legs)
     integrand = lambda ST: (portfolio_value(legs, ST, rate, eval_date) - cost0) * pdf(ST)
@@ -51,6 +47,6 @@ def expected_value(legs, spot, rate, iv_atm, eval_date):
     return EV
 
 def expected_return(EV, legs):
-    """Compute ER = EV/|cost0|."""
     cost0 = sum(l["qty"] * l["price"] for l in legs)
     return EV / abs(cost0)
+
