@@ -1,8 +1,8 @@
-‑ streamlit
-+ streamlit>=1.21.0
+streamlit>=1.21.0
 numpy
 scipy
 QuantLib-Python
 requests
 pandas
 plotly
+
