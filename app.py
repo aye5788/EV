@@ -23,11 +23,7 @@ default_leg = {
 }
 legs_df = st.data_editor(
     pd.DataFrame([default_leg]),
-    num_rows="dynamic",
-    column_config={
-      "type": st.ColumnConfig(type="select", options=["call","put"]),
-      "expiry": st.ColumnConfig(type="date")
-    }
+    num_rows="dynamic"
 )
 
 # Evaluation dates
@@ -63,4 +59,3 @@ if eval_dates:
     df = pd.DataFrame({"Underlying Price":STs, "P/L":PnL})
     fig = px.line(df, x="Underlying Price", y="P/L", title=f"P/L at {d0}")
     st.plotly_chart(fig)
-
